@@ -19,10 +19,14 @@ class Syllable:
         self.audio = audio_name
         return
 
+<<<<<<< HEAD
     def Activate(self):
         #Run audio based on length and pitch
         return
 
+=======
+#added comment to test github
+>>>>>>> ef8a1d065796ebe26ee00351da665ae6780fa95a
 
 # Takes a StringVar() and converts it into a list of words
 def SplitInput(input_val):
