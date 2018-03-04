@@ -6,7 +6,7 @@ import time
 import requests
 import syllables
 from aupyom import Sampler, Sound
-from aupyom.util import example_audio_file
+from aupyom.util import GetSyllableAudio
 
 #json_stuff = 'http://api.datamuse.com/words?sp=example&d=sp&md=fr&max=1' | python -mjson.tool
 
@@ -23,6 +23,11 @@ def main():
     sampler = Sampler()
     display_input = StringVar()
     syllables_audio_list = []
+
+    audio = GetSyllableAudio("[Amalee] God Knows")
+    sound = Sound.from_file(audio)
+    sampler.play(sound)
+    print(len(sound.y))
 
     # top frame that shows the syllables
     Tops = Frame(root, width=1100, height=200, bg="black", relief=SUNKEN)
