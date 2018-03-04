@@ -10,29 +10,34 @@ SPLIT = ('\s|(?<!\d)[,.!?]')
 # Takes the syllable in string form and finds the correct audio file based on it
 class Syllable:
 
-    def __init__(self, audio_name):
-        self.length = 1
-        self.pitch = 1
-        self.volume = 1
+    def __init__(self, name = ""):
+        self.length = 0
+        self.pitch = 0
+        self.volume = 0
         self.start_time = 0.0
-        self.audio = GetSyllableAudio(audio_name)
-        self.sound = Sound.from_file(self.audio)
+
+        if (name != ""):
+            self.audio_name = name
+            self.audio = GetSyllableAudio(self.audio_name)
+            self.sound = Sound.from_file(self.audio)
+            self.duration = len(self.sound.y)/self.sound.sr
         return
 
     def ChangePitch(self, num):
-        self.pitch = num
+        self.pitch = float(num)
         self.sound.pitchchange(self.pitch)
 
     def ChangeLength(self, num):
-        self.length = num
+        self.length = float(num)
         self.sound.speedchange(self.length)
+        self.duration = len(self.sound.y)/(self.sound.sr * self.length)
 
     def ChangeVolume(self, num):
-        self.volume = num
+        self.volume = float(num)
         self.sound.volumechange(self.volume)
 
     def ChangeStartTime(self, num):
-        self.start_time = num
+        self.start_time = float(num)
 
     def Activate(self):
         return self.sound
@@ -40,8 +45,8 @@ class Syllable:
 
 # Takes a StringVar() and converts it into a list of words
 def SplitInput(input_val):
-    user_input = str(input_val.get())
-    words_list = re.split(SPLIT, user_input)
+    #user_input = str(input_val.get())
+    words_list = re.split(SPLIT, input_val)
 
     return words_list
 
@@ -49,6 +54,7 @@ def SplitInput(input_val):
 def SplitSyllables(audio_list, display_input):
     words_list = SplitInput(display_input)
     syllable_list = []
+    del audio_list[:]
 
     if len(words_list) == 0:
         audio_list = []
@@ -58,7 +64,7 @@ def SplitSyllables(audio_list, display_input):
         if word != "":
             word_syllables = Syllabize(word)
             if (word_syllables == None):
-                print("%s could not be parsed.")
+                print("%s could not be parsed." %word)
             else:
                 for syllable in word_syllables:
                     syllable_list.append(syllable)
@@ -66,6 +72,9 @@ def SplitSyllables(audio_list, display_input):
     for s in syllable_list:
         temp = Syllable(s)
         audio_list.append(temp)
+
+    for x in range(1, len(audio_list)):
+        audio_list[x].start_time = audio_list[x - 1].duration
 
     return
 
