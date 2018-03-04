@@ -15,6 +15,6 @@ f1.pack(side = LEFT)
 f2 = Frame(root, width = 300, height = 700, bg = "powder blue", relief = SUNKEN)
 f2.pack(side = RIGHT)
 
-
+#added comment to test github
 
 root.mainloop()
