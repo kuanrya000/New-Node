@@ -1,0 +1,22 @@
+Metadata-Version: 2.0
+Name: aupyom
+Version: 0.1.0
+Summary: Real-time Audio time-scale and pitch modification.
+Home-page: https://github.com/pierre-rouanet/aupyom
+Author: Pierre Rouanet
+Author-email: pierre.rouanet@gmail.com
+License: GNU GENERAL PUBLIC LICENSE Version 3
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering
+Requires-Dist: future
+Requires-Dist: librosa
+Requires-Dist: numpy
+Requires-Dist: sounddevice
+Provides-Extra: doc
+Requires-Dist: sphinx; extra == 'doc'
+
+UNKNOWN
+
+

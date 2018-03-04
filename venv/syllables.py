@@ -48,7 +48,6 @@ def SplitSyllables(display_input):
 
 # Ideal case: inputs a string, returns lexical stress pronunciation list if it can, otherwise returns None
 def Syllabize(input):
-
     # Attempt to fetch url for API
     try:
         url = "http://api.datamuse.com/words?sp=" + input + "&d=sp&md=fr&max=1"
