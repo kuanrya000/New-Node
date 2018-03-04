@@ -2,7 +2,7 @@ import urllib.request
 import json
 import re
 from aupyom import Sampler, Sound
-from aupyom.util import GetSyllableAudio
+from aupyom.util import example_audio_file, GetSyllableAudio
 
 # Split string base
 SPLIT = ('\s|(?<!\d)[,.!?]')
@@ -15,13 +15,18 @@ class Syllable:
         self.pitch = 0
         self.volume = 0
         self.start_time = 0.0
+        self.audio_name = name
 
-        if (name != ""):
-            self.audio_name = name
+        if self.audio_name != "":
             self.audio = GetSyllableAudio(self.audio_name)
-            self.sound = Sound.from_file(self.audio)
-            self.duration = len(self.sound.y)/self.sound.sr
+        else:
+            self.audio = example_audio_file()
+
+        self.sound = Sound.from_file(self.audio)
+        self.duration = len(self.sound.y) / self.sound.sr
+
         return
+
 
     def ChangePitch(self, num):
         self.pitch = float(num)
@@ -30,7 +35,7 @@ class Syllable:
     def ChangeLength(self, num):
         self.length = float(num)
         self.sound.speedchange(self.length)
-        self.duration = len(self.sound.y)/(self.sound.sr * self.length)
+        self.duration = len(self.sound.y)/(self.sound.stretch_factor)
 
     def ChangeVolume(self, num):
         self.volume = float(num)
