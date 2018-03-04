@@ -79,7 +79,7 @@ def SplitSyllables(audio_list, display_input):
         audio_list.append(temp)
 
     for x in range(1, len(audio_list)):
-        audio_list[x].start_time = audio_list[x - 1].duration
+        audio_list[x].start_time = audio_list[x - 1].duration + audio_list[x - 1].start_time
 
     return
 

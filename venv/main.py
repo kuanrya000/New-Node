@@ -7,6 +7,9 @@ import requests
 import syllables
 from aupyom import Sampler, Sound
 from aupyom.util import GetSyllableAudio, example_audio_file
+from threading import Thread
+import subprocess
+from multiprocessing import Process
 
 class MainScreen:
     def __init__(self, root):
@@ -22,6 +25,9 @@ class MainScreen:
 
         # A list of all buttons showing the syllables at the top
         self.buttons_list = []
+
+        # A list of all buttons showing the syllables at the top
+        self.spaces_list = []
 
         # Audio player
         self.sampler = Sampler()
@@ -56,7 +62,7 @@ class MainScreen:
         self.vol_slider.pack()
         self.pitch_slider.pack()
         self.speed_slider.pack()
-
+        Thread.__init__(self)
 
 
     def ChangeVol(self, val):
@@ -71,15 +77,31 @@ class MainScreen:
         if self.syllable_pointer_number != num:
             self.syllable_pointer_number = num
             self.SetSliderVal()
+        self.sampler = Sampler()
         self.sampler.play(self.syllables_audio_list[self.syllable_pointer_number].Activate())
 
     # Plays all sounds
     def play_sounds(self):
+        space_time = 0.0;
+        space_index = 0;
+        stime = 0.0
+        space_array = []
+        for x in range(0, len(self.spaces_list)):
+            space_array.append(float(self.spaces_list[x].get("1.0",END)))
+
         start_time = time.time()
-        for syllable in self.syllables_audio_list:
-            while ((time.time() - start_time) <= syllable.start_time):
-                pass
-            self.sampler.play(syllable.Activate())
+        for y in range(0, len(self.syllables_audio_list)):
+            space_time += space_array[y]
+            temp = self.syllables_audio_list[y].start_time+space_time
+            print(self.syllables_audio_list[y].audio_name)
+            print(temp)
+            while ((time.time() - start_time) < temp):
+                True
+            self.sampler = Sampler()
+            self.sampler.play(self.syllables_audio_list[y].Activate())
+            self.sampler.running = True
+            self.sampler.run()
+
 
     # After clicking on a syllable button
     def SetSliderVal(self):
@@ -91,24 +113,29 @@ class MainScreen:
     def CreateButtons(self):
         x = 0
         for x in range(0, len(self.syllables_audio_list)):
+            space = Text(self.Tops, bd=8, fg="black", font=('arial', 10, 'bold'), bg="powder blue", height = 1, width = 4)
+            space.insert(1.0, "0.0")
             button = Button(self.Tops, bd=8, fg="black", font=('arial', 20, 'bold'), text = self.syllables_audio_list[x].audio_name,
                                             bg="powder blue", command=lambda num = x: self.play_sound(num), height = 0, width = 0)
-            button.grid(row = 0, column = x)
+            space.grid(row=0, column= (2 * x))
+            button.grid(row = 0, column = (2* x)+1)
+            self.spaces_list.append(space)
             self.buttons_list.append(button)
 
     # Called when enter is hit
     def RemakeSyllables(self, string):
+        for space in self.spaces_list:
+            space.destroy()
         for button in self.buttons_list:
             button.destroy()
         del self.buttons_list[:]
+        del self.spaces_list[:]
         syllables.SplitSyllables(self.syllables_audio_list, string)
         self.CreateButtons()
 
         if (self.syllables_audio_list):
             self.syllable_pointer = 0
             self.SetSliderVal()
-
-
 
 def main():
     root = Tk()
@@ -131,6 +158,7 @@ def main():
     editArea.pack(anchor='nw', fill="both", expand=1)
     editArea.configure(font=("Times New Roman", 24, "bold"))
 
+
     # Enter button
     enter_button = Button(main_interface.f2, padx=16, pady=16, bd=8, fg="black", font=('arial', 20, 'bold'), text="Enter",
                                bg="powder blue", command=lambda: main_interface.RemakeSyllables(editArea.get("1.0", END)))
@@ -139,6 +167,7 @@ def main():
     play_button = Button(main_interface.f2, padx=16, pady=16, bd=8, fg="black", font=('arial', 20, 'bold'), text="Play",
                               bg="powder blue", command=lambda: main_interface.play_sounds())
     play_button.pack()
+
 
     # audio = example_audio_file()
     # s1 = Sound.from_file(audio)
