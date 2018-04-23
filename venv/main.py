@@ -93,13 +93,11 @@ class MainScreen:
         for y in range(0, len(self.syllables_audio_list)):
             space_time += space_array[y]
             temp = self.syllables_audio_list[y].start_time+space_time
-            print(self.syllables_audio_list[y].audio_name)
-            print(temp)
             while ((time.time() - start_time) < temp):
                 True
             self.sampler = Sampler()
             self.sampler.play(self.syllables_audio_list[y].Activate())
-            self.sampler.running = True
+            #self.sampler.running = True
             self.sampler.run()
 
 
